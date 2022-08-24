@@ -18,16 +18,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+      "config": {
+        "googleMapsApiKey": "AIzaSyD-VNM4AaQkbnJn4_rnpm1COrE2Mf2cRYE"
+      }
+    }
+    ,
+    "android":{
+      "config":{
+          "googleMaps":{
+              "apiKey": "AIzaSyD-VNM4AaQkbnJn4_rnpm1COrE2Mf2cRYE"
+          }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "notification": {
+      "icon": "./assets/notificationicon.png",
+      "color": "#3cb3ff"
     }
   }
 }
