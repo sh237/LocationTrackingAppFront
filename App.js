@@ -32,7 +32,9 @@ function App (){
       console.log(result.exif);
       console.log(result.exif.GPSLatitude);
       console.log(result.exif.GPSLongitude);
-      setMarker(marker=>({...marker,latlng:{latitude:parseInt(result.exif.GPSLatitude),longtitude:parseInt(result.exif.GPSLongitude)}}))}; 
+      const Latitude = result.exif.GPSLatitude;
+      const Longitude = result.exif.GPSLongitude;
+      setMarker(marker=>({...marker,latlng:{"latitude":parseInt(Latitude),"longitude":parseInt(Longitude)}}))}; 
       console.log(marker.latlng);   
   };
 
