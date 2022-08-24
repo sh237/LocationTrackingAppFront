@@ -14,7 +14,6 @@ function PermissionButton(props) {
   const { type, title } = props;
   const [isLoading, setLoading] = useState(false);
   const [isGranted, setGranted] = useState(false);
-
   return (
     <TouchableOpacity
       style={{

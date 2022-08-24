@@ -22,6 +22,7 @@ function App (){
       aspect: [4, 3],
       quality: 1,
       exif: true,
+      heif: true,
     });
   
 
@@ -34,7 +35,7 @@ function App (){
       console.log(result.exif.GPSLongitude);
       const Latitude = result.exif.GPSLatitude;
       const Longitude = result.exif.GPSLongitude;
-      setMarker(marker=>({...marker,latlng:{"latitude":parseInt(Latitude),"longitude":parseInt(Longitude)}}))}; 
+      setMarker(marker=>({...marker,latlng:{"latitude":Latitude,"longitude":Longitude}}))}; 
       console.log(marker.latlng);   
   };
 
@@ -72,7 +73,7 @@ function App (){
                 </Marker>
                 <Marker coordinate={marker.latlng}>
                   <Button title="Pick an image from camera rolls" onPress={pickImage} />
-                  {image && <Image source={{ uri: image }} style={{ width: 20, height: 20 }} />}
+                  {image && <Image source={{ uri: image }} style={{ width: 30, height: 30 }} />}
                 </Marker>
                 
                 
