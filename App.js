@@ -1,7 +1,10 @@
 import React , { Component,useState, useEffect } from 'react';
-import { StyleSheet, Text, View ,Image, Button} from 'react-native';
+import { StyleSheet, Text, View ,Image, Button, CameraRoll} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as ImagePicker from 'expo-image-picker';
+import Exif from 'react-native-exif';
+import * as MediaLibrary from 'expo-media-library';
+// import CameraRoll from 'react-native-cameraroll';
 
 function App (){
  
@@ -22,15 +25,13 @@ function App (){
       aspect: [4, 3],
       quality: 1,
       exif: true,
-      heif: true,
     });
   
 
-    console.log(result);
+    console.log(result.exif);
 
     if (!result.cancelled) {
       setImage(result.uri);
-      console.log(result.exif);
       console.log(result.exif.GPSLatitude);
       console.log(result.exif.GPSLongitude);
       const Latitude = result.exif.GPSLatitude;
@@ -38,6 +39,27 @@ function App (){
       setMarker(marker=>({...marker,latlng:{"latitude":Latitude,"longitude":Longitude}}))}; 
       console.log(marker.latlng);   
   };
+  const ReadExif = () => {
+    Exif.getExif('file:///Users/nagashimashunya/React/LocationTrackingAppFront/LocationTrackingAppFront/assets/IMG_2066.jpg')
+    .then(msg => console.warn('OK: ' + JSON.stringify(msg)))
+    .catch(msg => console.warn('ERROR: ' + msg))
+    // setMarker(marker=>({...marker,latlng:{"latitude":Latitude,"longitude":Longitude}}))
+  }; 
+  const ReadPhoto = async () => {
+    const media = await MediaLibrary.getAssetsAsync({
+      first: 10,
+      mediaType: ['photo'],
+      // createdAfter: moment(new Date()).add(-14, 'days').toDate(),
+    });
+    console.log(media)
+    const photo = await MediaLibrary.getAssetInfoAsync(media.assets[4]);
+    console.log(photo.location.latitude)
+    setMarker(marker=>({...marker,latlng:{"latitude":photo.location.latitude,"longitude":photo.location.longitude}})); 
+    setImage(photo.uri)
+
+  }
+
+  
 
 
 
@@ -72,8 +94,8 @@ function App (){
                 </Text>
                 </Marker>
                 <Marker coordinate={marker.latlng}>
-                  <Button title="Pick an image from camera rolls" onPress={pickImage} />
-                  {image && <Image source={{ uri: image }} style={{ width: 30, height: 30 }} />}
+                  <Button title="Pick an image from camera rolls" onPress={ReadPhoto} />
+                  {image && <Image source={{ uri: image }} style={{ width: 100, height: 100 }} />}
                 </Marker>
                 
                 

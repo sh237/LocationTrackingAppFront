@@ -2,6 +2,16 @@
   "expo": {
     "name": "LocationTrackingAppFront",
     "slug": "LocationTrackingAppFront",
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow LocationTrackingAppFront to access your photos.",
+          "savePhotosPermission": "Allow LocationTrackingAppFront to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
