@@ -9,14 +9,7 @@ import * as MediaLibrary from 'expo-media-library';
 function App (){
  
   let [image, setImage] = useState('');
-  let [marker, setMarker] = useState({
-    title: '公園',
-    discription: '遊び場',
-    latlng: {
-      latitude: 35.249245,
-      longitude: 139.686818
-    },
-  });
+  let [markers, setMarkers] = useState([]);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -36,7 +29,7 @@ function App (){
       console.log(result.exif.GPSLongitude);
       const Latitude = result.exif.GPSLatitude;
       const Longitude = result.exif.GPSLongitude;
-      setMarker(marker=>({...marker,latlng:{"latitude":Latitude,"longitude":Longitude}}))}; 
+      setMarkers(marker=>({...marker,latlng:{"latitude":Latitude,"longitude":Longitude}}))}; 
       console.log(marker.latlng);   
   };
   const ReadExif = () => {
@@ -51,13 +44,63 @@ function App (){
       mediaType: ['photo'],
       // createdAfter: moment(new Date()).add(-14, 'days').toDate(),
     });
-    console.log(media)
+    // console.log(media)
     const photo = await MediaLibrary.getAssetInfoAsync(media.assets[4]);
-    console.log(photo.location.latitude)
-    setMarker(marker=>({...marker,latlng:{"latitude":photo.location.latitude,"longitude":photo.location.longitude}})); 
-    setImage(photo.uri)
-
+    let date = photo.exif["{Exif}"].DateTimeOriginal.split(' ')
+    let date_str = date[0].split(':')
+    let time_str = date[1].split(':')
+    setMarkers(markers=>({...markers,latlng:{"latitude":photo.location.latitude,"longitude":photo.location.longitude}})); 
+    setMarkers(markers=>({...markers,"datetime":new Date(Number(date_str[0]),Number(date_str[1])-1,Number(date_str[2],Number(time_str[0],Number(time_str[1]),Number(time_str[2])))).toLocaleString()})); 
+    setMarkers(markers=>({...markers,image:photo.uri}));
+    console.log(new Date(Number(date_str[0]),Number(date_str[1])-1,Number(date_str[2],Number(time_str[0],Number(time_str[1]),Number(time_str[2])))).toLocaleString())
   }
+
+  const ReadPhotos = async () => {
+    const media = await MediaLibrary.getAssetsAsync({
+      first: 5000,
+      mediaType: ['photo'],
+      // createdAfter: moment(new Date()).add(-14, 'days').toDate(),
+    });
+    // console.log(media)
+   media.assets.map(async(output,index) =>{
+      let photo = await MediaLibrary.getAssetInfoAsync(output);
+      // console.log(photo);console.log('i='+index);console.log(photo,photo.location);
+      if(photo.hasOwnProperty('exif') && photo.exif != '' && photo.exif.hasOwnProperty("{Exif}")){
+        if(photo && photo.uri != ""  && photo.uri != null && photo.hasOwnProperty('location') && photo.location != null && photo.location.hasOwnProperty('latitude') ){
+        let date = photo.exif["{Exif}"].DateTimeOriginal.split(' ')
+        let date_str = date[0].split(':')
+        let time_str = date[1].split(':')
+      
+      // console.log(photo.location.hasOwnProperty('latitude'))
+      
+       
+        let marker = {
+          title: '公園',
+          discription: '遊び場',
+          latlng: {
+            latitude: photo.location.latitude,
+            longitude: photo.location.longitude,
+          },
+          datetime:new Date(Number(date_str[0]),Number(date_str[1])-1,Number(date_str[2],Number(time_str[0],Number(time_str[1]),Number(time_str[2])))).toLocaleString(),
+          image:photo.uri
+        }
+        setMarkers((prevmarker)=>[...prevmarker,marker]); 
+        return marker;
+      }}
+  })
+    // const photo = await MediaLibrary.getAssetInfoAsync(media.assets[4]);
+    // console.log(photo.exif["{Exif}"].DateTimeOriginal)
+    // let date = photo.exif["{Exif}"].DateTimeOriginal.split(' ')
+    // let date_str = date[0].split(':')
+    // let time_str = date[1].split(':')
+    // setMarker(marker=>({...marker,latlng:{"latitude":photo.location.latitude,"longitude":photo.location.longitude}})); 
+    // setMarker(marker=>({...marker,"datetime":new Date(Number(date_str[0]),Number(date_str[1])-1,Number(date_str[2],Number(time_str[0],Number(time_str[1]),Number(time_str[2])))).toLocaleString()})); 
+    // setImage(photo.uri)
+    // console.log(new Date(Number(date_str[0]),Number(date_str[1])-1,Number(date_str[2],Number(time_str[0],Number(time_str[1]),Number(time_str[2])))).toLocaleString())
+  }
+  useEffect(() => {
+   ReadPhotos();
+  },[]);
 
   
 
@@ -83,7 +126,14 @@ function App (){
                     description={"JRの駅です。"} */}
                     {/* // onPress={()=>alert("click")}
                 // /> */}
-                <Marker coordinate={marker.latlng} >
+                {markers.map((marker,index) => {
+                  return <Marker coordinate={marker.latlng} >{console.log(marker)}
+                    <Text>
+                    {marker.image && <Image source={{ uri: marker.image }} style={{ width: 100, height: 100 }} />}
+                    </Text>
+                  </Marker>
+                })}
+                {/* <Marker coordinate={markers.latlng} >
                 <Text><Image
                   style={{
                     width: 34,
@@ -92,10 +142,10 @@ function App (){
                   source={require('./assets/favicon.png')}
                 />
                 </Text>
-                </Marker>
-                <Marker coordinate={marker.latlng}>
-                  <Button title="Pick an image from camera rolls" onPress={ReadPhoto} />
-                  {image && <Image source={{ uri: image }} style={{ width: 100, height: 100 }} />}
+                </Marker> */}
+                <Marker coordinate={{latitude: 35.249245,longitude: 139.686818}}>
+                <Button title="Pick an image from camera rolls" onPress={ReadPhotos} />
+                  {markers.image && <Image source={{ uri: markers.image }} style={{ width: 100, height: 100 }} />}
                 </Marker>
                 
                 
