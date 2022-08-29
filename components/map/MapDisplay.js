@@ -135,9 +135,9 @@ const MapDisplay = ({navigation}) => {
                   <Button title="Reload Screen" onPress={ReadPhotos} />
                     {markers.image && <Image source={{ uri: markers.image }} style={{ width: 100, height: 100 }} />}
                   </Marker>
-                  <Marker coordinate={{latitude: 35.2786737,longitude: 139.670043}}> 
+                  {/* <Marker coordinate={{latitude: 35.2786737,longitude: 139.670043}}>  */}
                   <Button title="Move to Calendar" onPress={() => {navigation.navigate('Calendar');}}/>
-                  </Marker>
+                  {/* </Marker> */}
 
               </MapView>
               
