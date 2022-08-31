@@ -16,8 +16,8 @@ const CalendarDisplay = ({navigation}) => {
     const [selected, setSelected] = useState(INITIAL_DATE);
     const handleDayPress = (day) => {
         setSelected(day.dateString);
-        console.log(new Date(selected).toLocaleString());
-        navigation.navigate("Map",{date:new Date(selected).toLocaleString()});
+        console.log(new Date(day.dateString).toLocaleString());
+        navigation.navigate("Map",{date:new Date(day.dateString).toLocaleString()});
         
         }
     
