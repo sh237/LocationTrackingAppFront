@@ -29,7 +29,22 @@
     ],
     "ios": {
       "config": {
-        "googleMapsApiKey": "AIzaSyD-VNM4AaQkbnJn4_rnpm1COrE2Mf2cRYE"
+        "googleMapsApiKey": "AIzaSyD-VNM4AaQkbnJn4_rnpm1COrE2Mf2cRYE",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "App requires geolocation to improve the quality of the service",
+        "NSLocationAlwaysUsageDescription": "App requires geolocation to improve the quality of the service",
+        "NSLocationWhenInUseUsageDescription": "App requires geolocation to improve the quality of the service",
+        "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+        "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+        "isAccessMediaLocationEnabled": true
+      },
+      "infoPlist": {
+        "bundleIdentifier": "com.ourtor.ourtorapp", 
+        "buildNumber": "0.0.8", 
+        "googleServicesFile": "./GoogleService-Info.plist",
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
       }
     }
     ,
